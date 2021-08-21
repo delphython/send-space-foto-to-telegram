@@ -23,7 +23,7 @@ export TELEGRAM_API_KEY="1998822660:AAGOTlPYBKJHpLzQORy8tYIkxO7KMUpcBNo"
 ```
 4. TELEGRAM_CHAT_ID is a link to Telegrem channel, for example: @dvmn_flood. Copy it to .env file:
 ```
-export TELEGRAM_CHAT_ID = "@dvmn_flood"
+export TELEGRAM_CHAT_ID="@dvmn_flood"
 ```
 
 ## Usage
