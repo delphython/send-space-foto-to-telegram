@@ -18,8 +18,8 @@ def download_image(url, filename):
         file.write(response.content)
 
 
-def fetch_spacex_launch():
-    url = "https://api.spacexdata.com/v3/launches/67"
+def fetch_spacex_launch(launch_number):
+    url = f"https://api.spacexdata.com/v3/launches/{launch_number}"
     links_header = "links"
     images_header = "flickr_images"
 
