@@ -29,8 +29,8 @@ def fetch_spacex_launch(launch_number):
     last_launch = response.json()
 
     images_urls = last_launch[links_header][images_header]
-    for number, image_url in enumerate(images_urls):
-        image_file_name = f"spacex{number + 1}.jpg"
+    for number, image_url in enumerate(images_urls, start=1):
+        image_file_name = f"spacex{number}.jpg"
         download_image(image_url, image_file_name)
 
 
