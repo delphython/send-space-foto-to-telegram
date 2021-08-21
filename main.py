@@ -48,10 +48,10 @@ def fetch_nasa_space_photos(token):
     response.raise_for_status()
     nasa_images = response.json()
 
-    for number, nasa_image in enumerate(nasa_images):
+    for number, nasa_image in enumerate(nasa_images, start=1):
         image_url = nasa_image[url_header]
         file_extension = get_file_extension(image_url)
-        image_file_name = f"nasa{number + 1}{file_extension}"
+        image_file_name = f"nasa{number}{file_extension}"
         download_image(image_url, image_file_name)
 
 
