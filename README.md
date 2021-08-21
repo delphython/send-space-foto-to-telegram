@@ -1,6 +1,6 @@
-# Space Instagram
+# Space Telegram
 
-Space Instagram is a console utility that download photos from the last SpaceX launch, NASA's Astronomy Picture of the Day site and NASA's Earth Polychromatic Imaging Camera site. And send it to Telegram channel.
+Space Telegram is a console utility that download photos from the last SpaceX launch, NASA's Astronomy Picture of the Day site and NASA's Earth Polychromatic Imaging Camera site. And send it to Telegram channel.
 
 ## Prerequisites
 
