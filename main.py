@@ -9,12 +9,9 @@ import time
 
 
 def download_image(url, filename):
-    dir = "./images"
     response = requests.get(url)
     response.raise_for_status()
 
-    if not os.path.exists(dir):
-        os.makedirs(dir)
     path_to_save_image = os.path.join(dir, filename)
 
     with open(path_to_save_image, "wb") as file:
@@ -105,8 +102,12 @@ def send_images_to_telegram():
 
 def main():
     nasa_api_key = os.environ["NASA_API_KEY"]
+    dir = "./images"
 
     load_dotenv()
+
+    if not os.path.exists(dir):
+        os.makedirs(dir)
 
     fetch_spacex_last_launch()
     fetch_nasa_space_photos(nasa_api_key)
