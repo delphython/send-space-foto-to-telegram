@@ -7,12 +7,19 @@ import telegram
 from os import listdir
 import time
 
+IMAGE_DIR = "./images"
 
-def download_image(url, filename):
-    response = requests.get(url)
+
+def download_image(url, filename, params=None):
+    is_params = (params is not None)
+    responses = {
+        True: requests.get(url, params),
+        False: requests.get(url),
+    }
+    response = responses[is_params]
     response.raise_for_status()
 
-    path_to_save_image = os.path.join(dir, filename)
+    path_to_save_image = os.path.join(IMAGE_DIR, filename)
 
     with open(path_to_save_image, "wb") as file:
         file.write(response.content)
@@ -31,11 +38,12 @@ def fetch_spacex_launch(launch_number):
     images_urls = last_launch[links_header][images_header]
     for number, image_url in enumerate(images_urls, start=1):
         image_file_name = f"spacex{number}.jpg"
+
         download_image(image_url, image_file_name)
 
 
 def fetch_nasa_space_photos(token):
-    images_count = 30
+    images_count = 2
     url_header = "url"
 
     nasa_url = "https://api.nasa.gov/planetary/apod"
@@ -52,6 +60,7 @@ def fetch_nasa_space_photos(token):
         image_url = nasa_image[url_header]
         file_extension = get_file_extension(image_url)
         image_file_name = f"nasa{number}{file_extension}"
+
         download_image(image_url, image_file_name)
 
 
@@ -69,11 +78,12 @@ def fetch_nasa_epic_photos(token):
 
     for number, epic_image in enumerate(epic_images, start=1):
         image_name = epic_image[image_header]
-        image_date = datetime.strptime(epic_image["date"], "%Y/%m/%d")
-        image_url = f"""https://api.nasa.gov/EPIC/archive/natural
-            /{image_date}/png/{image_name}.png?api_key={token}"""
+        image_dt = datetime.strptime(epic_image["date"], "%Y-%m-%d %H:%M:%S")
+        image_date = datetime.strftime(image_dt, "%Y/%m/%d")
+        image_url = f"https://api.nasa.gov/EPIC/archive/natural/{image_date}/png/{image_name}.png"
         image_file_name = f"epic{number}.png"
-        download_image(image_url, image_file_name)
+
+        download_image(image_url, image_file_name, params)
 
 
 def get_file_extension(url):
@@ -88,28 +98,27 @@ def get_file_extension(url):
 def send_images_to_telegram():
     telegram_api_key = os.environ["TELEGRAM_API_KEY"]
     chat_id = os.environ["TELEGRAM_CHAT_ID"]
-    image_dir = "./images"
     time_to_send_image = 86400
 
     bot = telegram.Bot(token=telegram_api_key)
 
     while True:
-        for image in listdir(image_dir):
+        for image in listdir(IMAGE_DIR):
             bot.send_document(chat_id=chat_id, document=open(
-                f"{image_dir}/{image}", "rb"))
+                f"{IMAGE_DIR}/{image}", "rb"))
             time.sleep(time_to_send_image)
 
 
 def main():
-    nasa_api_key = os.environ["NASA_API_KEY"]
-    dir = "./images"
-
     load_dotenv()
 
-    if not os.path.exists(dir):
-        os.makedirs(dir)
+    nasa_api_key = os.environ["NASA_API_KEY"]
+    spacex_launch_number = 67
 
-    fetch_spacex_launch()
+    if not os.path.exists(IMAGE_DIR):
+        os.makedirs(IMAGE_DIR)
+
+    fetch_spacex_launch(spacex_launch_number)
     fetch_nasa_space_photos(nasa_api_key)
     fetch_nasa_epic_photos(nasa_api_key)
 
