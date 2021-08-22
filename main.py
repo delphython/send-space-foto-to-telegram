@@ -95,17 +95,15 @@ def get_file_extension(url):
     return file_extension
 
 
-def send_images_to_telegram():
-    telegram_api_key = os.environ["TELEGRAM_API_KEY"]
-    chat_id = os.environ["TELEGRAM_CHAT_ID"]
+def send_images_to_telegram(token, chat_id):
     send_image_time = 86400
 
-    bot = telegram.Bot(token=telegram_api_key)
+    bot = telegram.Bot(token=token)
 
     while True:
         for image in listdir(IMAGE_DIR):
-            bot.send_document(chat_id=chat_id, document=open(
-                f"{IMAGE_DIR}/{image}", "rb"))
+            with open(f"{IMAGE_DIR}/{image}", "rb") as document:
+                bot.send_document(chat_id=chat_id, document=document)
             time.sleep(send_image_time)
 
 
@@ -113,6 +111,8 @@ def main():
     load_dotenv()
 
     nasa_api_key = os.environ["NASA_API_KEY"]
+    telegram_api_key = os.environ["TELEGRAM_API_KEY"]
+    chat_id = os.environ["TELEGRAM_CHAT_ID"]
     spacex_launch_number = 67
 
     if not os.path.exists(IMAGE_DIR):
@@ -122,7 +122,7 @@ def main():
     fetch_nasa_space_photos(nasa_api_key)
     fetch_nasa_epic_photos(nasa_api_key)
 
-    send_images_to_telegram()
+    send_images_to_telegram(telegram_api_key, chat_id)
 
 
 if __name__ == "__main__":
