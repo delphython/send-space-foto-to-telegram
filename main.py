@@ -23,7 +23,7 @@ def download_image(url, filename, image_dir, params=None):
         file.write(response.content)
 
 
-def fetch_spacex_launch(launch_number):
+def fetch_spacex_launch(launch_number, image_dir):
     url = f"https://api.spacexdata.com/v3/launches/{launch_number}"
     links_header = "links"
     images_header = "flickr_images"
@@ -37,10 +37,10 @@ def fetch_spacex_launch(launch_number):
     for number, image_url in enumerate(spacex_images, start=1):
         image_file_name = f"spacex{number}.jpg"
 
-        download_image(image_url, image_file_name)
+        download_image(image_url, image_file_name, image_dir)
 
 
-def fetch_nasa_space_photos(token):
+def fetch_nasa_space_photos(token, image_dir):
     images_count = 2
     url_header = "url"
 
@@ -59,10 +59,10 @@ def fetch_nasa_space_photos(token):
         file_extension = get_file_extension(image_url)
         image_file_name = f"nasa{number}{file_extension}"
 
-        download_image(image_url, image_file_name)
+        download_image(image_url, image_file_name, image_dir)
 
 
-def fetch_nasa_epic_photos(token):
+def fetch_nasa_epic_photos(token, image_dir):
     image_header = "image"
 
     epic_url = "https://api.nasa.gov/EPIC/api/natural/images"
@@ -81,7 +81,7 @@ def fetch_nasa_epic_photos(token):
         image_url = f"https://api.nasa.gov/EPIC/archive/natural/{image_date}/png/{image_name}.png"
         image_file_name = f"epic{number}.png"
 
-        download_image(image_url, image_file_name, params)
+        download_image(image_url, image_file_name, image_dir, params)
 
 
 def get_file_extension(url):
@@ -117,9 +117,9 @@ def main():
     if not os.path.exists(image_dir):
         os.makedirs(image_dir)
 
-    fetch_spacex_launch(spacex_launch_number)
-    fetch_nasa_space_photos(nasa_api_key)
-    fetch_nasa_epic_photos(nasa_api_key)
+    fetch_spacex_launch(spacex_launch_number, image_dir)
+    fetch_nasa_space_photos(nasa_api_key, image_dir)
+    fetch_nasa_epic_photos(nasa_api_key, image_dir)
 
     send_images_to_telegram(telegram_api_key, chat_id, image_dir)
 
