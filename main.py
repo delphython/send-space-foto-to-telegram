@@ -7,10 +7,8 @@ import telegram
 from os import listdir
 import time
 
-IMAGE_DIR = "./images"
 
-
-def download_image(url, filename, params=None):
+def download_image(url, filename, image_dir, params=None):
     is_params = (params is not None)
     responses = {
         True: requests.get(url, params),
@@ -19,7 +17,7 @@ def download_image(url, filename, params=None):
     response = responses[is_params]
     response.raise_for_status()
 
-    path_to_save_image = os.path.join(IMAGE_DIR, filename)
+    path_to_save_image = os.path.join(image_dir, filename)
 
     with open(path_to_save_image, "wb") as file:
         file.write(response.content)
@@ -95,14 +93,14 @@ def get_file_extension(url):
     return file_extension
 
 
-def send_images_to_telegram(token, chat_id):
+def send_images_to_telegram(token, chat_id, image_dir):
     send_image_time = 86400
 
     bot = telegram.Bot(token=token)
 
     while True:
-        for image in listdir(IMAGE_DIR):
-            with open(f"{IMAGE_DIR}/{image}", "rb") as document:
+        for image in listdir(image_dir):
+            with open(f"{image_dir}/{image}", "rb") as document:
                 bot.send_document(chat_id=chat_id, document=document)
             time.sleep(send_image_time)
 
@@ -114,15 +112,16 @@ def main():
     telegram_api_key = os.environ["TELEGRAM_API_KEY"]
     chat_id = os.environ["TELEGRAM_CHAT_ID"]
     spacex_launch_number = 67
+    image_dir = "./images"
 
-    if not os.path.exists(IMAGE_DIR):
-        os.makedirs(IMAGE_DIR)
+    if not os.path.exists(image_dir):
+        os.makedirs(image_dir)
 
     fetch_spacex_launch(spacex_launch_number)
     fetch_nasa_space_photos(nasa_api_key)
     fetch_nasa_epic_photos(nasa_api_key)
 
-    send_images_to_telegram(telegram_api_key, chat_id)
+    send_images_to_telegram(telegram_api_key, chat_id, image_dir)
 
 
 if __name__ == "__main__":
