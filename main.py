@@ -69,9 +69,9 @@ def fetch_nasa_epic_photos(token):
 
     for number, epic_image in enumerate(epic_images, start=1):
         image_name = epic_image[image_header]
-        image_dt = datetime.strptime(epic_image["date"], "%Y-%m-%d %H:%M:%S")
-        image_url = "https://api.nasa.gov/EPIC/archive/natural/%04d/%02d/%02d/png/%s.png?api_key=%s" % (
-            image_dt.year, image_dt.month, image_dt.day, image_name, token)
+        image_date = datetime.strptime(epic_image["date"], "%Y/%m/%d")
+        image_url = f"""https://api.nasa.gov/EPIC/archive/natural
+            /{image_date}/png/{image_name}.png?api_key={token}"""
         image_file_name = f"epic{number}.png"
         download_image(image_url, image_file_name)
 
