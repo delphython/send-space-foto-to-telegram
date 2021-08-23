@@ -77,8 +77,7 @@ def fetch_nasa_epic_photos(token, image_dir):
 def get_file_extension(url):
     parsed_url = urlparse(url)
     path = unquote(parsed_url.path)
-    *arg, file_full_name = os.path.split(path)
-    *arg, file_extension = os.path.splitext(file_full_name)
+    *arg, file_extension = os.path.splitext(path)
 
     return file_extension
 
