@@ -20,15 +20,13 @@ def download_image(url, filename, image_dir, params=None):
 
 def fetch_spacex_launch(launch_number, image_dir):
     url = f"https://api.spacexdata.com/v3/launches/{launch_number}"
-    links_header = "links"
-    images_header = "flickr_images"
 
     response = requests.get(url)
     response.raise_for_status()
 
     last_launch = response.json()
 
-    spacex_images = last_launch[links_header][images_header]
+    spacex_images = last_launch["links"]["flickr_images"]
     for number, image_url in enumerate(spacex_images, start=1):
         image_file_name = f"spacex{number}.jpg"
 
@@ -37,7 +35,6 @@ def fetch_spacex_launch(launch_number, image_dir):
 
 def fetch_nasa_space_photos(token, image_dir):
     images_count = 2
-    url_header = "url"
 
     nasa_url = "https://api.nasa.gov/planetary/apod"
     params = {
@@ -50,7 +47,7 @@ def fetch_nasa_space_photos(token, image_dir):
     nasa_images = response.json()
 
     for number, nasa_image in enumerate(nasa_images, start=1):
-        image_url = nasa_image[url_header]
+        image_url = nasa_image["url"]
         file_extension = get_file_extension(image_url)
         image_file_name = f"nasa{number}{file_extension}"
 
@@ -58,8 +55,6 @@ def fetch_nasa_space_photos(token, image_dir):
 
 
 def fetch_nasa_epic_photos(token, image_dir):
-    image_header = "image"
-
     epic_url = "https://api.nasa.gov/EPIC/api/natural/images"
     params = {
       "api_key": token,
@@ -70,7 +65,7 @@ def fetch_nasa_epic_photos(token, image_dir):
     epic_images = response.json()
 
     for number, epic_image in enumerate(epic_images, start=1):
-        image_name = epic_image[image_header]
+        image_name = epic_image["image"]
         image_dt = datetime.strptime(epic_image["date"], "%Y-%m-%d %H:%M:%S")
         image_date = datetime.strftime(image_dt, "%Y/%m/%d")
         image_url = f"https://api.nasa.gov/EPIC/archive/natural/{image_date}/png/{image_name}.png"
