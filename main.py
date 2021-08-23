@@ -24,9 +24,9 @@ def fetch_spacex_launch(launch_number, image_dir):
     response = requests.get(url)
     response.raise_for_status()
 
-    last_launch = response.json()
+    specific_launch = response.json()
 
-    spacex_images = last_launch["links"]["flickr_images"]
+    spacex_images = specific_launch["links"]["flickr_images"]
     for number, image_url in enumerate(spacex_images, start=1):
         image_file_name = f"spacex{number}.jpg"
 
