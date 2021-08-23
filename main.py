@@ -9,12 +9,7 @@ import time
 
 
 def download_image(url, filename, image_dir, params=None):
-    is_params = (params is not None)
-    responses = {
-        True: requests.get(url, params),
-        False: requests.get(url),
-    }
-    response = responses[is_params]
+    response = requests.get(url, params)
     response.raise_for_status()
 
     path_to_save_image = os.path.join(image_dir, filename)
