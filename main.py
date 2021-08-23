@@ -1,11 +1,13 @@
+
 import os
-import requests
-from urllib.parse import urlparse, unquote
-from datetime import datetime
-from dotenv import load_dotenv
-import telegram
-from os import listdir
 import time
+from datetime import datetime
+from os import listdir
+from urllib.parse import urlparse, unquote
+
+import requests
+import telegram
+from dotenv import load_dotenv
 
 
 def download_image(url, filename, image_dir, params=None):
