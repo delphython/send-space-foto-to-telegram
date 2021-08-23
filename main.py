@@ -83,7 +83,7 @@ def get_file_extension(url):
 
 
 def send_images_to_telegram(token, chat_id, image_dir):
-    send_image_time = 86400
+    image_sending_time = 86400
 
     bot = telegram.Bot(token=token)
 
@@ -91,7 +91,7 @@ def send_images_to_telegram(token, chat_id, image_dir):
         for image in listdir(image_dir):
             with open(f"{image_dir}/{image}", "rb") as document:
                 bot.send_document(chat_id=chat_id, document=document)
-            time.sleep(send_image_time)
+            time.sleep(image_sending_time)
 
 
 def main():
