@@ -12,9 +12,9 @@ def download_image(url, filename, image_dir, params=None):
     response = requests.get(url, params)
     response.raise_for_status()
 
-    path_to_save_image = os.path.join(image_dir, filename)
+    images_path = os.path.join(image_dir, filename)
 
-    with open(path_to_save_image, "wb") as file:
+    with open(images_path, "wb") as file:
         file.write(response.content)
 
 
