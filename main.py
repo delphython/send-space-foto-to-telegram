@@ -103,8 +103,7 @@ def main():
     spacex_launch_number = 67
     image_dir = "./images"
 
-    if not os.path.exists(image_dir):
-        os.makedirs(image_dir)
+    os.makedirs(image_dir, exist_ok=True)
 
     fetch_spacex_launch(spacex_launch_number, image_dir)
     fetch_nasa_space_photos(nasa_api_key, image_dir)
